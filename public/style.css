@@ -3,7 +3,7 @@ html, body {
     height: 100%;
 }
 .title {
-  font-size: 100px;
+  font-size: 10vh;
   margin-bottom: 0;
 }
 .header {
