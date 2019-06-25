@@ -49,7 +49,10 @@ html, body {
   background-color: #34495e;
 }
 .wump {
-  height: 50px;
+  height: 4vh;
   margin-left: 5px;
   margin-right: 5px;
+}
+.credits {
+  font-size: 2vh;
 }
