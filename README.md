@@ -23,6 +23,6 @@ Note: Enviromental variables can be set however you wish; the `.env` method is j
 
 About
 ---------
-Created as part of Discord Hack Week 2019 by [Zac Lovoy](https://twitter.com/zwlovoy).
+Created as part of [Discord Hack Week 2019](https://blog.discordapp.com/discord-community-hack-week-build-and-create-alongside-us-6b2a7b7bba33) by [Zac Lovoy](https://twitter.com/zwlovoy).
 
 ![Hack Wumpus](https://github.com/Zozman/ShoutBot/blob/master/public/hack_wump.png?raw=true)
