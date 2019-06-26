@@ -2,8 +2,8 @@
   "name": "Shout Bot",
   "description": "A Discord bot for being LOUD.",
   "website": "https://github.com/Zozman/ShoutBot",
-  "repository": "https://github.com/Zozman/ShoutBot/blob/master/public/megaphone.png?raw=true",
-  "logo": "https://small-sharp-tool.com/logo.svg",
+  "repository": "https://github.com/Zozman/ShoutBot",
+  "logo": "https://github.com/Zozman/ShoutBot/blob/master/public/megaphone.png?raw=true",
   "env": {
     "BOT_TOKEN": {
         "description": "Bot token for your bot from https://discordapp.com/developers (used to communicate with Discord)."
