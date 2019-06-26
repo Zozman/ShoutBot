@@ -9,7 +9,7 @@
         "description": "Bot token for your bot from https://discordapp.com/developers (used to communicate with Discord)."
     },
     "CLIENT_ID": {
-        "description": "Client ID for your bot from https://discordapp.com/developers (used to generate the bot's invite link).",
+        "description": "Client ID for your bot from https://discordapp.com/developers (used to generate the bot's invite link)."
     },
     "PORT": {
         "description": "Port to run the web server to display the instructions webpage.  Default value is 3000 (port used by Heroku)",
