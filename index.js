@@ -44,19 +44,74 @@ function setupMessageListener() {
 
 // Function to process a message and return a response to the Discord server text channel
 function processMessage(message) {
-  const input = message && message.content && message.content.length ? message.content.replace('!shout ', '') : null;
-  if (input) {
-    const separatedString = input.replaceAll(' ', '\n');
-    const image = text2png(separatedString, {
-      font: '60px Whitney',
-      color: 'yellow',
-      lineSpacing: 10
-    });
-    const attachment = new Discord.Attachment(image, 'shout.png');
-    message.channel.send(`From ${message.author}`, attachment);
-  } else {
-    message.reply('ERROR: Unable to shout');
+  // Make sure there is a message and there is content
+  if (message && message.content && message.content.length) {
+    // Split the message so we can separate the command from the content
+    const splitString = message.content.split(' ');
+    // Get the parameters if any are passed in
+    const parameterString = splitString[0].replace('!shout', '');
+    // Create a string for the rest of the message
+    const messageIndex = message.content.indexOf(" ");
+    const input = messageIndex && messageIndex !== -1 ? message.content.substr(message.content.indexOf(" ") + 1) : null;
+    // If a message was passed in, proceed
+    if (input) {
+      // Separate the message to be one word per line
+      const separatedString = input.replaceAll(' ', '\n');
+      // Generate the image
+      const image = text2png(separatedString, processParameters(parameterString));
+      // Build the discord message and send it
+      const attachment = new Discord.Attachment(image, 'shout.png');
+      message.channel.send(`From ${message.author}`, attachment);
+    } else {
+      // Else send back error message
+      message.reply('ERROR: Unable to shout');
+    }
   }
+}
+
+// Processes a list of parameters and returns the settings for our text2png function
+function processParameters(input) {
+  // Default output parameters
+  const output = {
+     font: '60px Whitney',
+     color: 'yellow',
+     lineSpacing: 10
+  };
+  // If parameters were passed in, process them
+  if (input && input.length) {
+    // Separate each option out
+    const options = input.startsWith("@") ? input.replace("@", "").split("@") : input.split("@");
+    // Font and size have to be returned as 1 output parameter so we will combine these later
+    let size = '60px';
+    let font = 'Whitney';
+    // For each option, process it
+    options.forEach((option) => {
+      // Extract the key and the value
+      const keyAndValue = option && option.length ? option.split(':') : null;
+      const key = keyAndValue && keyAndValue.length && keyAndValue[0] ? keyAndValue[0] : null;
+      const value = keyAndValue && keyAndValue.length && keyAndValue[1] ? keyAndValue[1] : null;
+      // If we got a valid key and value, use them as input if we offer this parameter
+      if (key && value) {
+        switch(key) {
+          case 'color':
+            output.color = value;
+            break;
+          case 'size':
+            // Cover if the user put in the px or not
+            size = value && value.indexOf('px') !== -1 ? value : `${value}px`;
+            break;
+          case 'font':
+            font = value;
+            break;
+          default:
+            break;
+        }
+      }
+    });
+    // Re-combine size and font into 1 parameter
+    output.font = `${size} ${font}`;
+  }
+  return output;
 }
 
 // Setup static file directory for web interface
