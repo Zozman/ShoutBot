@@ -100,9 +100,6 @@ function processParameters(input) {
             // Cover if the user put in the px or not
             size = value && value.indexOf('px') !== -1 ? value : `${value}px`;
             break;
-          case 'font':
-            font = value;
-            break;
           default:
             break;
         }
