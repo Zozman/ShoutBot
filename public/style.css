@@ -47,6 +47,9 @@ html, body {
   padding-top: 10px;
   padding-bottom: 10px;
   background-color: #34495e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .wump {
   height: calc(16px + 1vw);
