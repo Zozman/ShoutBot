@@ -2,6 +2,8 @@ Shout Bot
 =====================
 A bot for making your Discord conversations LOUD.
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 Usage
 ---------
 ```

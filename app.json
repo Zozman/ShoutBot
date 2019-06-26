@@ -1,0 +1,19 @@
+{
+  "name": "Shout Bot",
+  "description": "A Discord bot for being LOUD.",
+  "website": "https://github.com/Zozman/ShoutBot",
+  "repository": "https://github.com/Zozman/ShoutBot/blob/master/public/megaphone.png?raw=true",
+  "logo": "https://small-sharp-tool.com/logo.svg",
+  "env": {
+    "BOT_TOKEN": {
+        "description": "Bot token for your bot from https://discordapp.com/developers (used to communicate with Discord)."
+    },
+    "CLIENT_ID": {
+        "description": "Client ID for your bot from https://discordapp.com/developers (used to generate the bot's invite link).",
+    },
+    "PORT": {
+        "description": "Port to run the web server to display the instructions webpage.  Default value is 3000 (port used by Heroku)",
+        "required": false
+    }
+  }
+}
