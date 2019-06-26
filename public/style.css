@@ -49,10 +49,10 @@ html, body {
   background-color: #34495e;
 }
 .wump {
-  height: 4vh;
+  height: calc(16px + 1vw);
   margin-left: 5px;
   margin-right: 5px;
 }
 .credits {
-  font-size: 2vh;
+  font-size: calc(12px + 1vw);
 }
