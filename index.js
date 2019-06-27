@@ -28,6 +28,8 @@ bot.login(process.env.BOT_TOKEN);
 bot.on('ready', () => {
    console.log('Shoutbot Lives!');
    setupMessageListener();
+   bot.setInterval(updateBotStatus(), 5000);
+   updateBotStatus();
 });
 
 // Function to create the message listener for the bot
@@ -40,6 +42,30 @@ function setupMessageListener() {
        processMessage(message);
     }
   });
+}
+
+// Function to keep track of the number of servers running the bot and set it as the status
+function updateBotStatus() {
+  // Get how many servers are using the bot
+    const count = bot && bot.guilds ? bot.builds.array().length : null;
+    // If we got a count, update the status to show it
+    if (count) {
+      bot.user.setPresence({
+        game: {
+          name: `Shouting on ${count} servers`,
+          url: 'https://shoutbot.io'
+        },
+        status: 'online'
+      });
+    } else {
+      bot.user.setPresence({
+        game: {
+          name: `Ready to start SHOUTING`,
+          url: 'https://shoutbot.io'
+        },
+        status: 'online'
+      });
+    }
 }
 
 // Function to process a message and return a response to the Discord server text channel
