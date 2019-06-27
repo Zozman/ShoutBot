@@ -12,6 +12,12 @@ Usage
 
 ![Command Result](https://github.com/Zozman/ShoutBot/blob/master/public/demo.png?raw=true")
 
+```
+!shout@color:blue@size:100 HI AGAIN
+```
+
+![Command Result 2](https://github.com/Zozman/ShoutBot/blob/master/public/demo2.png?raw=true")
+
 How To Deploy
 ----------
 1. Create a Discord Application at the [Discord Developer Portal](https://discordapp.com/developers)
