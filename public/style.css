@@ -14,10 +14,11 @@ html, body {
   padding-bottom: 20px;
 }
 .inputText {
-  width: 200px;
+  width: 300px;
   background-color: #2C2F33;
   color: white;
   padding: 10px;
+  font-family: 'Open Sans', sans-serif;
 }
 .inputTextHolder {
   display: flex;
@@ -42,6 +43,7 @@ html, body {
   justify-content: center;
   align-items: center; 
   background-color: #22313f;
+  min-height: 300px;
 }
 .footer {
   padding-top: 10px;
