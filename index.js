@@ -27,8 +27,11 @@ bot.login(process.env.BOT_TOKEN);
 // Set up message listener when the bot has connected to Discord
 bot.on('ready', () => {
    console.log('Shoutbot Lives!');
+   // Setup listener for chat messages
    setupMessageListener();
-   bot.setInterval(updateBotStatus, 5000);
+   // Update status every minute
+   bot.setInterval(updateBotStatus, 60 * 1000);
+   // Manually update status now
    updateBotStatus();
 });
 
