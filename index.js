@@ -52,14 +52,16 @@ function updateBotStatus() {
     if (count) {
       bot.user.setPresence({
         game: {
-          name: `SHOUTING on ${count} servers`
+          name: `SHOUTING on ${count} servers`,
+          type: 'PLAYING'
         },
         status: 'online'
       });
     } else {
       bot.user.setPresence({
         game: {
-          name: `Ready to start SHOUTING`
+          name: `Ready to start SHOUTING`,
+          type: 'PLAYING'
         },
         status: 'online'
       });
