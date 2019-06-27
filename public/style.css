@@ -52,6 +52,7 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 70px;
 }
 .wump {
   height: calc(16px + 1vw);
