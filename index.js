@@ -28,7 +28,7 @@ bot.login(process.env.BOT_TOKEN);
 bot.on('ready', () => {
    console.log('Shoutbot Lives!');
    setupMessageListener();
-   bot.setInterval(updateBotStatus(), 5000);
+   bot.setInterval(updateBotStatus, 5000);
    updateBotStatus();
 });
 
