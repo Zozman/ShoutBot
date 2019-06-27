@@ -76,7 +76,7 @@ function processParameters(input) {
      font: '60px OpenSans',
      color: 'yellow',
      lineSpacing: 10,
-     localFontPath: 'fonts/OpenSans-Regular.ttf',
+     localFontPath: 'OpenSans-Regular.ttf',
      localFontName: 'OpenSans'
   };
   // If parameters were passed in, process them
