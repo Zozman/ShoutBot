@@ -52,16 +52,14 @@ function updateBotStatus() {
     if (count) {
       bot.user.setPresence({
         game: {
-          name: `Shouting on ${count} servers`,
-          url: 'https://shoutbot.io'
+          name: `SHOUTING on ${count} servers`
         },
         status: 'online'
       });
     } else {
       bot.user.setPresence({
         game: {
-          name: `Ready to start SHOUTING`,
-          url: 'https://shoutbot.io'
+          name: `Ready to start SHOUTING`
         },
         status: 'online'
       });
