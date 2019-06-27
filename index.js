@@ -73,9 +73,11 @@ function processMessage(message) {
 function processParameters(input) {
   // Default output parameters
   const output = {
-     font: '60px Whitney',
+     font: '60px OpenSans',
      color: 'yellow',
-     lineSpacing: 10
+     lineSpacing: 10,
+     localFontPath: 'fonts/OpenSans-Regular.ttf',
+     localFontName: 'OpenSans'
   };
   // If parameters were passed in, process them
   if (input && input.length) {
@@ -83,7 +85,7 @@ function processParameters(input) {
     const options = input.startsWith("@") ? input.replace("@", "").split("@") : input.split("@");
     // Font and size have to be returned as 1 output parameter so we will combine these later
     let size = '60px';
-    let font = 'Whitney';
+    let font = 'OpenSans';
     // For each option, process it
     options.forEach((option) => {
       // Extract the key and the value
