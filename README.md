@@ -13,7 +13,7 @@ Usage
 ![Command Result](https://github.com/Zozman/ShoutBot/blob/master/public/demo.png?raw=true")
 
 ```
-!shout@color:blue@size:100 HI AGAIN
+!shout@color:pink@size:100 HI AGAIN
 ```
 
 ![Command Result 2](https://github.com/Zozman/ShoutBot/blob/master/public/demo2.png?raw=true")
