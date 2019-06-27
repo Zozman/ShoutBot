@@ -47,7 +47,7 @@ function setupMessageListener() {
 // Function to keep track of the number of servers running the bot and set it as the status
 function updateBotStatus() {
   // Get how many servers are using the bot
-    const count = bot && bot.guilds ? bot.builds.array().length : null;
+    const count = bot && bot.guilds && bot.guilds.array() ? bot.guilds.array().length : null;
     // If we got a count, update the status to show it
     if (count) {
       bot.user.setPresence({
