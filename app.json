@@ -1,7 +1,7 @@
 {
   "name": "Shout Bot",
   "description": "A Discord bot for being LOUD.",
-  "website": "https://github.com/Zozman/ShoutBot",
+  "website": "https://shoutbot.io",
   "repository": "https://github.com/Zozman/ShoutBot",
   "logo": "https://github.com/Zozman/ShoutBot/blob/master/public/megaphone.png?raw=true",
   "env": {
