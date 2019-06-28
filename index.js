@@ -40,11 +40,13 @@ function setupMessageListener() {
   bot.on('message', message => {
     // Exit if any bot; humans only
     if(message.author.bot) return;
-    // If this is a shout command, process it
-    if (message.content.startsWith("!shout")) {
-       processMessage(message);
-    } else if (message.content.startsWith("!shouthelp")) {
+    // If it's a help command, show the help
+    if (message.content.startsWith("!shouthelp")) {
        processHelp(message);
+    }
+    // If this is a shout command, process it
+    else if (message.content.startsWith("!shout")) {
+       processMessage(message);
     }
   });
 }
