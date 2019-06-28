@@ -18,6 +18,12 @@ Usage
 
 ![Command Result 2](https://github.com/Zozman/ShoutBot/blob/master/public/demo2.png?raw=true")
 
+Get Help
+---------
+```
+!shouthelp
+```
+
 How To Deploy
 ----------
 1. Create a Discord Application at the [Discord Developer Portal](https://discordapp.com/developers)
