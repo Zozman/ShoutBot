@@ -102,11 +102,14 @@ function processMessage(message) {
   }
 }
 
+// Function to print help for Shout Bot when !shouthelp is entered
 function processHelp(message) {
+  // Make sure we have a message
   if (message && message.reply) {
-    console.log('1');
+    // Reply to the request for help
     message.reply('Shout Bot Help', {
       embed: {
+        color: 0xfffb00,
         fields: [
           {
             name: 'Basic Usage',
@@ -127,7 +130,6 @@ function processHelp(message) {
         ]
       }
     });
-    console.log('2');
   }
 }
 
