@@ -104,9 +104,9 @@ function processMessage(message) {
 
 function processHelp(message) {
   if (message && message.reply) {
+    console.log('1');
     message.reply('Shout Bot Help', {
       embed: {
-        color: 'yellow',
         fields: [
           {
             name: 'Basic Usage',
@@ -127,6 +127,7 @@ function processHelp(message) {
         ]
       }
     });
+    console.log('2');
   }
 }
 
