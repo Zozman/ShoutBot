@@ -43,6 +43,8 @@ function setupMessageListener() {
     // If this is a shout command, process it
     if (message.content.startsWith("!shout")) {
        processMessage(message);
+    } else if (message.content.startsWith("!shouthelp")) {
+       processHelp(message);
     }
   });
 }
@@ -95,6 +97,34 @@ function processMessage(message) {
       // Else send back error message
       message.reply('ERROR: Unable to shout');
     }
+  }
+}
+
+function processHelp(message) {
+  if (message && message.reply) {
+    message.reply('Shout Bot Help', {
+      embed: {
+        color: 'yellow',
+        fields: [
+          {
+            name: 'Basic Usage',
+            value: '`!shout <CONTENT>` Creates an image of the `<CONTENT>` you entered using default settings'
+          },
+          {
+            name: 'Set Color',
+            value: '`!shout@color:<COLOR> <CONTENT>` Creates an image of the `<CONTENT>` you entered in the `<COLOR>` you set (can take English color names or hex codes)'
+          },
+          {
+            name: 'Set Size',
+            value: '`!shout@size:<SIZE> <CONTENT>` Creates an image of the `<CONTENT>` you entered in the `<SIZE>` you set (values are in pixels)'
+          },
+          {
+            name: 'Mix It Up',
+            value: '`!shout@color:<COLOR>@size:<SIZE> <CONTENT>` You can use any amount of options you want at once'
+          }
+        ]
+      }
+    });
   }
 }
 
