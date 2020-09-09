@@ -54,21 +54,23 @@ function setupMessageListener() {
 // Function to keep track of the number of servers running the bot and set it as the status
 function updateBotStatus() {
   // Get how many servers are using the bot
-    const count = bot && bot.guilds && bot.guilds.array() ? bot.guilds.array().length : null;
+    const count = bot && bot.guilds && bot.guilds.cache && bot.guilds.cache.array() ? bot.guilds.cache.array().length : null;
     // If we got a count, update the status to show it
     if (count) {
       bot.user.setPresence({
-        game: {
+        activity: {
           name: `SHOUTING on ${count} servers`,
-          type: 'PLAYING'
+          type: 'PLAYING',
+          url: 'https://shoutbot.io'
         },
         status: 'online'
       });
     } else {
       bot.user.setPresence({
-        game: {
+        acivity: {
           name: `Ready to start SHOUTING`,
-          type: 'PLAYING'
+          type: 'PLAYING',
+          url: 'https://shoutbot.io'
         },
         status: 'online'
       });
@@ -93,7 +95,7 @@ function processMessage(message) {
       // Generate the image
       const image = text2png(separatedString, processParameters(parameterString));
       // Build the discord message and send it
-      const attachment = new Discord.Attachment(image, 'shout.png');
+      const attachment = new Discord.MessageAttachment(image, 'shout.png');
       message.channel.send(`From ${message.author}`, attachment);
     } else {
       // Else send back error message
