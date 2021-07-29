@@ -1,0 +1,10 @@
+version: "3"
+services:
+  main:
+    build: .
+    environment:
+      PORT: 8080
+      BOT_TOKEN: Your_Discord_Bot_Token_Goes_Here
+      CLIENT_ID: Your_Discord_Bot_Client_Id_Goes_Here
+    ports:
+      - "8080:8080"

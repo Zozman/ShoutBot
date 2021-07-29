@@ -1,0 +1,8 @@
+.github
+.dockerignore
+Dockerfile
+docker-compose.yml
+LICENSE.md
+README.md
+.jsbeautifyrc
+.prettierrc

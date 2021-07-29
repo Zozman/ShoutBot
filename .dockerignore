@@ -1,0 +1,10 @@
+.github
+node_modules
+.env
+.env_template
+.gitignore
+app.json
+LICENSE.md
+package-lock.json
+README.md
+.slugignore
