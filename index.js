@@ -119,23 +119,25 @@ function updateBotStatus() {
   // Get how many servers are using the bot
     const count = bot && bot.guilds && bot.guilds.cache && bot.guilds.cache.size ? bot.guilds.cache.size : null;
     // If we got a count, update the status to show it
-    if (count) {
+  if (count) {
       bot.user.setPresence({
-        activity: {
-          name: `SHOUTING on ${count} servers`,
-          type: 'PLAYING',
-          url: 'https://shoutbot.io'
-        },
-        status: 'online'
+        activities: [
+          {
+            name: `SHOUTING on ${count} servers`,
+            type: 'PLAYING',
+            url: 'https://shoutbot.io'
+          },
+        ],
       });
-    } else {
+  } else {
       bot.user.setPresence({
-        acivity: {
-          name: `Ready to start SHOUTING`,
+        activities: [
+          {
+            name: `Ready to start SHOUTING`,
           type: 'PLAYING',
           url: 'https://shoutbot.io'
-        },
-        status: 'online'
+          },
+        ],
       });
     }
 }
