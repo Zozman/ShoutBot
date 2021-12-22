@@ -1,6 +1,6 @@
 {
   "name": "shoutbot",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A bot for SHOUTING into your discord.",
   "homepage": "https://shoutbot.io",
   "main": "index.js",
