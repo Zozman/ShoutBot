@@ -7,13 +7,13 @@ A bot for making your Discord conversations LOUD.
 Usage
 ---------
 ```
-!shout HI EVERYBODY
+/shout text: HI EVERYBODY
 ```
 
 ![Command Result](https://github.com/Zozman/ShoutBot/blob/master/public/demo.png?raw=true")
 
 ```
-!shout@color:pink@size:100 HI AGAIN
+/shout input: HI AGAIN size: 200 color: red
 ```
 
 ![Command Result 2](https://github.com/Zozman/ShoutBot/blob/master/public/demo2.png?raw=true")
