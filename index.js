@@ -11,15 +11,20 @@ String.prototype.replaceAll = function(search, replace) {
     return this.replace(new RegExp(RegExp.escape(search),'g'), replace);
 };
 
-const Discord  = require("discord.js");
+const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
 const text2png = require('text2png');
 const express  = require('express');
-const app      = express();
+const app = express();
+
+// For local testing, use a defined guild because it's faster
+const testGuildId = process.env.TEST_GUILD_ID;
 
 // Create the discord bot
-const bot = new Discord.Client({
-  autoReconnect: true
-});
+const bot = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const rest = new REST({ version: '9' }).setToken(process.env.BOT_TOKEN);
 
 // Login the bot to discord
 bot.login(process.env.BOT_TOKEN);
@@ -27,26 +32,84 @@ bot.login(process.env.BOT_TOKEN);
 // Set up message listener when the bot has connected to Discord
 bot.on('ready', () => {
    console.log('Shoutbot Lives!');
+   // Register the slash commands
+   registerComands();
    // Setup listener for chat messages
-   setupMessageListener();
+   setupListener();
    // Update status every minute
-   bot.setInterval(updateBotStatus, 60 * 1000);
+   setInterval(updateBotStatus, 60 * 1000);
    // Manually update status now
    updateBotStatus();
 });
 
-// Function to create the message listener for the bot
-function setupMessageListener() {
-  bot.on('message', message => {
-    // Exit if any bot; humans only
-    if(message.author.bot) return;
-    // If it's a help command, show the help
-    if (message.content.startsWith("!shouthelp")) {
-       processHelp(message);
+// Function to register the slash commands to Discord
+async function registerComands() {
+  // Create the commands
+  const commands = [
+    // shout command
+    new SlashCommandBuilder()
+      .setName('shout')
+      .setDescription('SHOUTS your input')
+      .addStringOption(option =>
+        option.setName('input')
+          .setDescription('The text to SHOUT back')
+          .setRequired(true))
+      .addStringOption(option =>
+        option.setName('color')
+          .setDescription('Optional color to change the SHOUT to (can take english color names or HEX codes)'))
+      .addIntegerOption(option =>
+        option.setName('size')
+          .setDescription('Optional size to change the SHOUT to (in pixels)')),
+    // shouthelp command
+    new SlashCommandBuilder()
+      .setName('shouthelp')
+      .setDescription('Get help for Shout Bot')
+  ].map(command => command.toJSON());
+  
+  // If we're testing use the guild command path
+  if (testGuildId) {
+    try {
+      console.log('Started refreshing application (/) commands (TEST GUILD SCOPE).');
+
+      await rest.put(
+        Routes.applicationGuildCommands(bot.user.id, testGuildId),
+        { body: commands },
+      );
+
+      console.log('Successfully reloaded application (/) commands (TEST GUILD SCOPE).');
+    } catch (error) {
+      console.error(error);
     }
+  // Else use the global command path
+  } else {
+    try {
+      console.log('Started refreshing application (/) commands.');
+
+      await rest.put(
+        Routes.applicationCommands(bot.user.id),
+        { body: commands },
+      );
+
+      console.log('Successfully reloaded application (/) commands.');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}
+
+// Function to create the listener for the bot
+function setupListener() {
+  bot.on('interactionCreate', async interaction => {
+    if (!interaction.isCommand()) return;
+
+    const { commandName } = interaction;
+
+    // If it's a help command, show the help
+    if (commandName === 'shouthelp') {
+      processHelp(interaction);
     // If this is a shout command, process it
-    else if (message.content.startsWith("!shout")) {
-       processMessage(message);
+    } else if (commandName === 'shout') {
+      processMessage(interaction);
     }
   });
 }
@@ -54,7 +117,7 @@ function setupMessageListener() {
 // Function to keep track of the number of servers running the bot and set it as the status
 function updateBotStatus() {
   // Get how many servers are using the bot
-    const count = bot && bot.guilds && bot.guilds.cache && bot.guilds.cache.array() ? bot.guilds.cache.array().length : null;
+    const count = bot && bot.guilds && bot.guilds.cache && bot.guilds.cache.size ? bot.guilds.cache.size : null;
     // If we got a count, update the status to show it
     if (count) {
       bot.user.setPresence({
@@ -78,29 +141,28 @@ function updateBotStatus() {
 }
 
 // Function to process a message and return a response to the Discord server text channel
-function processMessage(message) {
-  // Make sure there is a message and there is content
-  if (message && message.content && message.content.length) {
-    // Split the message so we can separate the command from the content
-    const splitString = message.content.split(' ');
-    // Get the parameters if any are passed in
-    const parameterString = splitString[0].replace('!shout', '');
-    // Create a string for the rest of the message
-    const messageIndex = message.content.indexOf(" ");
-    const input = messageIndex && messageIndex !== -1 ? message.content.substr(message.content.indexOf(" ") + 1) : null;
-    // If a message was passed in, proceed
-    if (input) {
-      // Separate the message to be one word per line
-      const separatedString = input.replaceAll(' ', '\n');
-      // Generate the image
-      const image = text2png(separatedString, processParameters(parameterString));
-      // Build the discord message and send it
-      const attachment = new Discord.MessageAttachment(image, 'shout.png');
-      message.channel.send(`From ${message.author}`, attachment);
-    } else {
-      // Else send back error message
-      message.reply('ERROR: Unable to shout');
-    }
+async function processMessage(message) {
+  // Get inputs
+  const input = message.options.getString('input');
+  const color = message.options.getString('color');
+  const size = message.options.getInteger('size');
+  // If we got an input, proceed
+  if (input) {
+    // First defer the reply so that we have time to compute the response
+    await message.deferReply();
+    // Separate the message to be one word per line
+    const separatedString = input.replaceAll(' ', '\n');
+    // Generate the image
+    const image = text2png(separatedString, processParameters(color, size));
+    // Build the discord message and send it
+    const attachment = new MessageAttachment(image, 'shout.png');
+    // Now update the reply
+    message.editReply({
+      files: [attachment]
+    });
+  } else {
+    // Else send back error message
+    message.reply('ERROR: Unable to SHOUT');
   }
 }
 
@@ -108,35 +170,38 @@ function processMessage(message) {
 function processHelp(message) {
   // Make sure we have a message
   if (message && message.reply) {
+    // Create the embed to use to reply with
+    const embed = new MessageEmbed()
+      .setColor(0xfffb00)
+      .setTitle('Shout Bot Help')
+      .setURL(`https://shoutbot.io`)
+      .addFields(
+        {
+          name: 'Basic Usage',
+          value: '`/shout input: <CONTENT>` Creates an image of the `<CONTENT>` you entered using default settings.'
+        },
+        {
+          name: 'Set Color',
+          value: '`/shout input: <CONTENT> color:<COLOR>` Creates an image of the `<CONTENT>` you entered in the `<COLOR>` you set (can take English color names or hex codes).'
+        },
+        {
+          name: 'Set Size',
+          value: '`/shout input: <CONTENT> size:<SIZE>` Creates an image of the `<CONTENT>` you entered in the `<SIZE>` you set (values are in pixels).'
+        },
+        {
+          name: 'Mix It Up',
+          value: '`/shout input: <CONTENT> color:<COLOR> size:<SIZE>` You can use any amount of options you want at once.'
+        },
+      )
+      .setFooter('ShoutBot');
+
     // Reply to the request for help
-    message.reply('Shout Bot Help', {
-      embed: {
-        color: 0xfffb00,
-        fields: [
-          {
-            name: 'Basic Usage',
-            value: '`!shout <CONTENT>` Creates an image of the `<CONTENT>` you entered using default settings'
-          },
-          {
-            name: 'Set Color',
-            value: '`!shout@color:<COLOR> <CONTENT>` Creates an image of the `<CONTENT>` you entered in the `<COLOR>` you set (can take English color names or hex codes)'
-          },
-          {
-            name: 'Set Size',
-            value: '`!shout@size:<SIZE> <CONTENT>` Creates an image of the `<CONTENT>` you entered in the `<SIZE>` you set (values are in pixels)'
-          },
-          {
-            name: 'Mix It Up',
-            value: '`!shout@color:<COLOR>@size:<SIZE> <CONTENT>` You can use any amount of options you want at once'
-          }
-        ]
-      }
-    });
+    message.reply({embeds: [embed], ephemeral: true});
   }
 }
 
 // Processes a list of parameters and returns the settings for our text2png function
-function processParameters(input) {
+function processParameters(color, size) {
   // Default output parameters
   const output = {
      font: '60px OpenSans',
@@ -145,36 +210,13 @@ function processParameters(input) {
      localFontPath: 'OpenSans-Regular.ttf',
      localFontName: 'OpenSans'
   };
-  // If parameters were passed in, process them
-  if (input && input.length) {
-    // Separate each option out
-    const options = input.startsWith("@") ? input.replace("@", "").split("@") : input.split("@");
-    // Font and size have to be returned as 1 output parameter so we will combine these later
-    let size = '60px';
-    let font = 'OpenSans';
-    // For each option, process it
-    options.forEach((option) => {
-      // Extract the key and the value
-      const keyAndValue = option && option.length ? option.split(':') : null;
-      const key = keyAndValue && keyAndValue.length && keyAndValue[0] ? keyAndValue[0] : null;
-      const value = keyAndValue && keyAndValue.length && keyAndValue[1] ? keyAndValue[1] : null;
-      // If we got a valid key and value, use them as input if we offer this parameter
-      if (key && value) {
-        switch(key) {
-          case 'color':
-            output.color = value;
-            break;
-          case 'size':
-            // Cover if the user put in the px or not
-            size = value && value.indexOf('px') !== -1 ? value : `${value}px`;
-            break;
-          default:
-            break;
-        }
-      }
-    });
-    // Re-combine size and font into 1 parameter
-    output.font = `${size} ${font}`;
+  // If we got a color, change it
+  if (color) {
+    output.color = color;
+  }
+  // If we got a size change it
+  if (size) {
+    output.font = `${size}px OpenSans`
   }
   return output;
 }
@@ -182,14 +224,14 @@ function processParameters(input) {
 // Setup static file directory for web interface
 app.use(express.static(__dirname + '/public'));
 
-// For avoidong Heroku $PORT error
+// For avoiding Heroku $PORT error
 app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/index.html');
 });
 
 // Helper method to redirect the user to your discord bot instance invite link
 app.get('/invite', function (req, res) {
-  res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=34816&scope=bot`);
+  res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&scope=bot%20applications.commands`);
 });
 
 app.listen(process.env.PORT || 3000);
