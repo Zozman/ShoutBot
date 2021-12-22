@@ -21,7 +21,7 @@ Usage
 Get Help
 ---------
 ```
-!shouthelp
+/shouthelp
 ```
 
 How To Deploy
